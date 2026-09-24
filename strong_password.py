@@ -4,18 +4,16 @@ Two kinds of password:
 - memorable: random words from the EFF long wordlist ("Stubbed Congress Tiptop")
 - random: mixed characters ("aB3$cD9#eF2@")
 
-Run it:
-    uv run strong_password.py
-
-The settings are written inside main(), at the bottom of this file: to change
-them you edit the code and run the script again. Turning them into command-line
-options is the exercise.
+Command line:
+    uv run strong_password.py -t memorable -l 5
+    uv run strong_password.py -t random -l 16
 
 From Python:
     >>> gen = StrongPassword(length=5, type_p=TypePassword.MEMORABLE)
     >>> password = gen.generate()
 """
 
+import argparse
 import secrets
 from enum import StrEnum, auto
 from pathlib import Path
@@ -78,12 +76,28 @@ class StrongPassword:
 
 
 def main() -> None:
-    """Entry point. The settings are in the code, right here."""
-    # Edit these two values, then run the script again.
-    password_type = "memorable"  # "memorable" or "random"
-    length = 12  # number of words (memorable) or characters (random)
+    """Command-line entry point."""
+    parser = argparse.ArgumentParser(
+        prog="strong_password",
+        description="Generate a strong password.",
+    )
+    parser.add_argument(
+        "-t",
+        "--type",
+        choices=[t.value for t in TypePassword],
+        required=True,
+        help="'memorable' (words) or 'random' (characters)",
+    )
+    parser.add_argument(
+        "-l",
+        "--length",
+        type=int,
+        default=12,
+        help="number of words (memorable) or characters (random); default: 12",
+    )
+    args = parser.parse_args()
 
-    generator = StrongPassword(length=length, type_p=TypePassword(password_type))
+    generator = StrongPassword(length=args.length, type_p=TypePassword(args.type))
     print(generator.generate())
 
 

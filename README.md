@@ -17,23 +17,16 @@ uv sync
 ## Use
 
 ```bash
-uv run strong_password.py        # e.g. Stubbed Congress Tiptop Playmate Stagnate
+uv run strong_password.py --help
+uv run strong_password.py -t memorable -l 5      # e.g. Stubbed Congress Tiptop Playmate Stagnate
+uv run strong_password.py -t random -l 16        # e.g. aB3$cD9#eF2@gH7!
+uv run strong_password.py -t random              # default length: 12
 ```
 
-It takes no options yet. The two settings — which kind of password, and how long —
-are written inside `main()`, at the bottom of `strong_password.py`:
+Options:
 
-```python
-password_type = "memorable"  # "memorable" or "random"
-length = 12
-```
-
-To get a different password you edit those lines and run the script again.
-
-**That is the exercise:** turn them into command-line options, so that
-`uv run strong_password.py -t random -l 16` works and `--help` documents itself.
-The statement is on the course site, [exercise 2.3](https://knuxv.github.io/cours-agents/exercises/password-generator/).
-The finished version is on the `solution` branch — look at it after you have tried.
+- `-t`, `--type` (required): `memorable` (words) or `random` (characters)
+- `-l`, `--length`: number of words (memorable) or characters (random); default 12
 
 Compare the two kinds with the [zxcvbn](https://github.com/dwolfhub/zxcvbn-python) strength estimator:
 
@@ -49,7 +42,7 @@ uv run pytest
 
 ## Files
 
-- `strong_password.py` — the generator; its command line is yours to write
+- `strong_password.py` — the generator and its command line (`argparse`)
 - `compute_crack_time.py` — strength comparison, uses the `zxcvbn` dependency
 - `tests/` — pytest suite
 - `data/eff_large_wordlist.txt` — the [EFF long wordlist](https://www.eff.org/dice) (7776 words)
